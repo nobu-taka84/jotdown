@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>jot down</title>
+  <link rel="icon" type="image/png" th:href="@{/img/icon.png}" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" th:href="@{/css/common.css}" />
+  <th:block layout:fragment="stylesheet" th:remove="tag"></th:block>
+</head>
+
+<body>
+  <div layout:fragment="navi">
+    <div th:include="common/navi :: header_navi"></div>
+  </div>
+  <div class="container">
+    <div layout:fragment="content" th:remove="tag"></div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <th:block layout:fragment="script" th:remove="tag"></th:block>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="common/layout">
+<head>
+  <title>jot down</title>
+  <th:block layout:fragment="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/github-custom.css}" />
+    <link rel="stylesheet" th:href="@{/css/highlight_default.min.css}" />
+  </th:block>
+</head>
+
+<body>
+  <div id="content" layout:fragment="content">
+    <div class="row">
+	  <div th:if="${itemList}">
+        <div th:each="item : ${itemList}" class="panel-group" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" th:onClick="'showPanelBody(' + ${item.id} + ')'">
+                  <span th:text="${item.title}" th:id="'title-' + ${item.id}"></span>
+                </a>
+                <span class="btn btn-xs btn-default pull-right glyphicon glyphicon-pencil" th:onClick="'showEditModal(\'edit\', ' + ${item.id} + ')'" title="編集"></span>
+              </h4>
+            </div>
+            <div th:id="'collapse-' + ${item.id}" class="panel-collapse collapse">
+              <div class="panel-body">
+                <input type="hidden" th:id="'formattedFlag-' + ${item.id}" value="false" />
+                <input type="hidden" th:id="'memo-' + ${item.id}" th:value="${item.memo}" />
+                <div th:id="'md-memo-' + ${item.id}" class="markdown-body"></div>
+              </div>
+              <div class="panel-body-footer">
+                <span class="margin-right-8 btn btn-xs btn-default glyphicon glyphicon-chevron-up" th:onClick="'showPanelBody(' + ${item.id} + ')'" title="閉じる"></span>
+                <span class="margin-right-8 btn btn-xs btn-default glyphicon glyphicon-pencil" th:onClick="'showEditModal(\'edit\', ' + ${item.id} + ')'" title="編集"></span>
+                <span class="btn btn-xs btn-danger glyphicon glyphicon-trash" th:onClick="'showDeleteModal(' + ${item.id} + ')'" title="削除"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4 col-sm-offset-4">
+        <span class="btn btn-default btn-block" onClick="showEditModal('add',0)">追 加</span>
+      </div>
+    </div>
+
+    <!-- 追加/編集用モーダル -->
+    <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header padding-10">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">閉じる</span></button>
+            <h5 class="modal-title" id="modalTitle"></h5>
+          </div>
+          <div class="modal-body padding-10">
+            <form class="form-group margin-bottom-0" role="form" th:action="@{/item/edit}" method="post" name="editItemForm">
+              <input type="hidden" name="editMode" id="editMode" />
+              <input type="hidden" name="itemId" id="editItemId" />
+              <div class="form-group">
+                <label for="inputTitle">title</label>
+                <input type="text" class="form-control" name="title" id="inputTitle" autocomplete="off"/>
+              </div>
+              <div class="form-group" style="margin-bottom:0px;">
+                <label for="inputMemo">memo</label>
+                <textarea class="form-control" name="memo" id="inputMemo" rows="12"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer padding-10">
+            <button type="button" class="btn btn-sm btn-default pull-left" data-dismiss="modal">キャンセル</button>
+            <button type="button" class="btn btn-sm btn-primary" id="submitItemButton" onclick="this.disabled = true; editItemFormSubmit();"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 追加/編集用モーダル -->
+    <div class="modal fade" id="deleteItemModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header padding-10">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">閉じる</span></button>
+            <h5 class="modal-title">削除</h5>
+          </div>
+          <form class="form-group" role="form" th:action="@{/item/delete}" method="post" name="deleteItemForm">
+            <input type="hidden" name="itemId" id="deleteItemId" />
+            <div class="modal-body">削除してよろしいですか？</div>
+          </form>
+          <div class="modal-footer padding-10">
+            <button type="button" class="btn btn-sm btn-default pull-left" data-dismiss="modal">キャンセル</button>
+            <button type="button" class="btn btn-sm btn-danger" onclick="this.disabled = true; deleteItemFormSubmit();">削除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <th:block layout:fragment="script">
+    <script th:src="@{/js/marked.min.js}"></script>
+    <script th:src="@{/js/highlight.min.js}"></script>
+    <script type="text/javascript">
+	$(function() {
+	    marked.setOptions({
+	        langPrefix: ''
+	    });
+	});
+
+	function showPanelBody(id) {
+		if ($('#formattedFlag-' + id).val() === 'false') {
+			var formatted = marked($("#memo-" + id).val());
+			$('#md-memo-' + id).html(formatted);
+	        $('#md-memo-' + id + ' pre code').each(function(i, e) {
+	            hljs.highlightBlock(e, e.className);
+	        });
+			$('#formattedFlag-' + id).val(true);
+		}
+		$('#collapse-' + id).collapse('toggle');
+	}
+	
+	function showEditModal(mode, id){
+		$('#editMode').val(mode);
+		$('#editItemId').val(id);
+		if (mode === 'add') {
+			$('#modalTitle').html('追加');
+			$('#submitItemButton').html('追加');
+			$('#inputTitle').val('');
+			$('#inputMemo').html('');
+			$('#editItemModal').modal('show');
+		} else if (mode === 'edit') {
+			$('#modalTitle').html('編集');
+			$('#submitItemButton').html('編集');
+			$('#inputTitle').val($('#title-' + id).html());
+			$('#inputMemo').html($("#memo-" + id).val());
+			$('#editItemModal').modal('show');
+		}
+	}
+	function editItemFormSubmit() {
+		document.editItemForm.submit();
+	}
+
+	function showDeleteModal(id) {
+		$('#deleteItemId').val(id);
+		$('#deleteItemModal').modal('show');
+	}
+	function deleteItemFormSubmit() {
+		document.deleteItemForm.submit();
+	}
+    </script>
+  </th:block>
+</body>
+</html>
