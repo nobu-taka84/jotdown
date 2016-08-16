@@ -46,7 +46,6 @@ public class AccountController {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-
     /**
      * 会員登録フォーム表示
      *

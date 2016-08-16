@@ -62,7 +62,7 @@ public class ItemController {
         if (Strings.isNullOrEmpty(form.getTitle())) {
             alertMessageList.add("titleが未入力です");
         }
-        
+
         if (alertMessageList.isEmpty()) {
             UserInfoDto userInfoDto = customUserDetailsService.getAuthUserInfo();
             itemService.editItem(userInfoDto.getId(), form);
@@ -86,7 +86,7 @@ public class ItemController {
         if (form.getItemId() == null) {
             alertMessageList.add("対象が不正です");
         }
-        
+
         if (alertMessageList.isEmpty()) {
             itemService.deleteItem(form.getItemId());
         } else {
