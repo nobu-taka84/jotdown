@@ -1,6 +1,6 @@
 package org.springframework.jotdown.service.impl;
 
-import java.util.Arrays;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +69,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoDto selectUserInfoByUsername(String userName) {
-        UserInfo userInfo = userInfoRepository.findByUsername(userName);
+        UserInfo userInfo = userInfoRepository.findByUsernameAndDeleteFlagFalse(userName);
         if (userInfo == null) {
             return null;
         }
@@ -122,6 +122,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             userInfo.setId(userInfoId);
             userInfo.setUsername(userName);
             userInfo.setPassword(stretchingPassword);
+            userInfo.setMissCount(0);
+            userInfo.setDeleteFlag(false);
             userInfo.setCreatedBy(userInfoId.toString());
             userInfo.setUpdatedBy(userInfoId.toString());
 
@@ -133,7 +135,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.setPasswordValidTerm(new java.sql.Date(cal.getTime().getTime()));
             }
 
-            userInfoRepository.createUserInfo(userInfo);
+            userInfoRepository.save(userInfo);
 
             UserPrivilegeInfo userPrivilegeInfo = new UserPrivilegeInfo();
             userPrivilegeInfo.setUserInfoId(userInfoId);
@@ -145,8 +147,6 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userPrivilegeInfo.setUserPrivilege(UserPrivilege.USER.getUserPrivilege());
             }
             userPrivilegeInfoRepository.save(userPrivilegeInfo);
-
-            userInfo.setUserPrivilegeInfoList(Arrays.asList(userPrivilegeInfo.getUserPrivilege()));
         } catch (Exception e) {
             transactionManager.rollback(status);
             LOGGER.error("■ ユーザー作成失敗 : " + e);
@@ -186,7 +186,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.setPasswordValidTerm(new java.sql.Date(cal.getTime().getTime()));
             }
 
-            userInfoRepository.updatePassword(userInfo);
+            userInfoRepository.save(userInfo);
 
         } catch (Exception e) {
             LOGGER.error("■ パスワード更新失敗 : " + e);
@@ -198,7 +198,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void updateLastLoginedAt(Long userId) {
-        userInfoRepository.updateLastLoginedAt(userId);
+        UserInfo userInfo = userInfoRepository.findOne(userId);
+        userInfo.setLastLoginedAt(new Timestamp(System.currentTimeMillis()));
+        userInfoRepository.save(userInfo);
     }
 
     @Override
@@ -208,7 +210,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void updateMissCount(Long userId) {
-        userInfoRepository.updateMissCount(userId);
+        UserInfo userInfo = userInfoRepository.findOne(userId);
+        userInfo.setMissCount(userInfo.getMissCount() + 1);
+        userInfoRepository.save(userInfo);
     }
 
 }

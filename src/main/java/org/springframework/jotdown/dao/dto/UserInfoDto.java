@@ -18,7 +18,7 @@ public class UserInfoDto implements Serializable {
 
     private Date passwordValidTerm;
 
-    private Short missCount;
+    private Integer missCount;
 
     private List<String> userPrivilegeInfoList;
 
@@ -107,14 +107,14 @@ public class UserInfoDto implements Serializable {
     /**
      * @return missCount
      */
-    public Short getMissCount() {
+    public Integer getMissCount() {
         return missCount;
     }
 
     /**
      * @param missCount セットする missCount
      */
-    public void setMissCount(Short missCount) {
+    public void setMissCount(Integer missCount) {
         this.missCount = missCount;
     }
 

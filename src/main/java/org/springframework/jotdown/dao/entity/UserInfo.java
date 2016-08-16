@@ -3,29 +3,42 @@ package org.springframework.jotdown.dao.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user_info")
+@NamedQuery(name = "UserInfo.findAll", query = "SELECT a FROM UserInfo a")
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
     private Long id;
 
     private String username;
 
     private String password;
 
+    @Column(name = "last_logined_at")
     private Timestamp lastLoginedAt;
 
+    @Column(name = "password_valid_term")
     private Date passwordValidTerm;
 
-    private Short missCount;
+    @Column(name = "miss_count")
+    private Integer missCount;
 
-    private List<String> userPrivilegeInfoList;
-
+    @Column(name = "delete_flg")
     private Boolean deleteFlag;
 
+    @Column(name = "created_by")
     private String createdBy;
 
+    @Column(name = "updated_by")
     private String updatedBy;
 
     public UserInfo() {}
@@ -103,29 +116,15 @@ public class UserInfo implements Serializable {
     /**
      * @return missCount
      */
-    public Short getMissCount() {
+    public Integer getMissCount() {
         return missCount;
     }
 
     /**
      * @param missCount セットする missCount
      */
-    public void setMissCount(Short missCount) {
+    public void setMissCount(Integer missCount) {
         this.missCount = missCount;
-    }
-
-    /**
-     * @return userPrivilegeInfoList
-     */
-    public List<String> getUserPrivilegeInfoList() {
-        return userPrivilegeInfoList;
-    }
-
-    /**
-     * @param userPrivilegeInfoList セットする userPrivilegeInfoList
-     */
-    public void setUserPrivilegeInfoList(List<String> userPrivilegeInfoList) {
-        this.userPrivilegeInfoList = userPrivilegeInfoList;
     }
 
     /**

@@ -42,12 +42,9 @@ auth:
 spring:
   profiles: heroku
   datasource:
-    url: jdbc:postgresql://localhost:5432/jotdown
-    username: postgres
-    password: postgres
     driverClassName: org.postgresql.Driver
   jpa:
-    showSql: true
+    showSql: false
     databasePlatform: org.hibernate.dialect.PostgreSQLDialect
   thymeleaf:
     cache: true

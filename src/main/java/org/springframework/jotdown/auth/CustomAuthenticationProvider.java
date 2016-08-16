@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jotdown.constants.UserPrivilege;
 import org.springframework.jotdown.dao.dto.UserInfoDto;
+import org.springframework.jotdown.dao.dto.UserPrivilegeInfoDto;
 import org.springframework.jotdown.dao.entity.LoginHistory;
 import org.springframework.jotdown.exception.UserInfoException;
 import org.springframework.jotdown.service.AuthService;
@@ -118,9 +119,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      */
     public Authentication setUserPrivilege(UserInfoDto userInfo) throws AuthenticationException {
         // 権限付与
+        List<UserPrivilegeInfoDto> userPrivilegeInfoList = userInfoService.selectUserPrivilegeInfoByUserInfoId(userInfo.getId());
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-        userInfo.getUserPrivilegeInfoList().forEach(privilege -> {
-            authorityList.add(new SimpleGrantedAuthority(UserPrivilege.getUserRole(privilege)));
+        userPrivilegeInfoList.forEach(userPrivilege -> {
+            authorityList.add(new SimpleGrantedAuthority(UserPrivilege.getUserRole(userPrivilege.getUserPrivilege())));
         });
 
         // ログインユーザーをセット

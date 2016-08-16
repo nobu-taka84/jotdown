@@ -50,8 +50,8 @@ DO $$
 BEGIN
     CREATE TABLE user_info (
       id bigint NOT NULL, -- ID
-      username bytea NOT NULL, -- ユーザ名
-      password bytea NOT NULL, -- パスワード
+      username character varying NOT NULL, -- ユーザ名
+      password character varying NOT NULL, -- パスワード
       last_logined_at timestamp without time zone, -- 前回ログイン日時
       password_valid_term date, -- パスワード有効期限
       miss_count smallint NOT NULL DEFAULT 0, -- 連続認証失敗回数
@@ -168,11 +168,6 @@ BEGIN
 EXCEPTION
     WHEN duplicate_table THEN RAISE NOTICE 'table item already exists.';
 END $$;
-
-
-
--- pgcrypto の設定
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 
 -- ユーザ情報ID採番に初期値セット
