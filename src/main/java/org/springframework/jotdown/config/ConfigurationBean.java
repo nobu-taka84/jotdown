@@ -41,8 +41,7 @@ public class ConfigurationBean {
         if (databaseUrl != null) {
             // heroku側
             URI dbUri = new URI(databaseUrl);
-            url = "jdbc:postgresql://" //
-                    + dbUri.getHost() + dbUri.getPath() + ":" + dbUri.getPort() + dbUri.getPath();
+            url = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
             username = dbUri.getUserInfo().split(":")[0];
             password = dbUri.getUserInfo().split(":")[1];
         } else {
