@@ -28,8 +28,6 @@ auth:
   passwordEncryption:
     partOfSolt: 1234567890abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQR
     stretchingCount: 1000
-    key: key12345
-    iv: iv67890
   userNameMinLength: 5
   userNameMaxLength: 256
   userNameComplexity: ^([a-zA-Z0-9])[a-zA-Z0-9¥._-]{3,}([a-zA-Z0-9])$
@@ -56,8 +54,6 @@ auth:
   passwordEncryption:
     partOfSolt: 1234567890abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQR
     stretchingCount: 1000
-    key: key12345
-    iv: iv67890
   userNameMinLength: 5
   userNameMaxLength: 256
   userNameComplexity: ^([a-zA-Z0-9])[a-zA-Z0-9¥._-]{3,}([a-zA-Z0-9])$
