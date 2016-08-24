@@ -29,8 +29,8 @@ BEGIN
     CREATE TABLE login_history (
       id bigserial NOT NULL, -- ID
       user_info_id bigint NOT NULL, -- ユーザID
-      ip_address character varying(64), -- IPアドレス
-      user_agent character varying(128), -- UA
+      ip_address varchar, -- IPアドレス
+      user_agent varchar, -- UA
       logined_at timestamp without time zone NOT NULL, -- ログイン日時
       CONSTRAINT login_history_pkc PRIMARY KEY (id)
     );
@@ -50,16 +50,16 @@ DO $$
 BEGIN
     CREATE TABLE user_info (
       id bigint NOT NULL, -- ID
-      username character varying NOT NULL, -- ユーザ名
-      password character varying NOT NULL, -- パスワード
+      username varchar NOT NULL, -- ユーザ名
+      password varchar NOT NULL, -- パスワード
       last_logined_at timestamp without time zone, -- 前回ログイン日時
       password_valid_term date, -- パスワード有効期限
-      miss_count smallint NOT NULL DEFAULT 0, -- 連続認証失敗回数
+      miss_count integer NOT NULL DEFAULT 0, -- 連続認証失敗回数
       delete_flg boolean NOT NULL DEFAULT false, -- 削除フラグ
       created_at timestamp without time zone NOT NULL, -- 作成日時
-      created_by character varying, -- 作成者
+      created_by varchar, -- 作成者
       updated_at timestamp without time zone NOT NULL, -- 更新日時
-      updated_by character varying, -- 更新者
+      updated_by varchar, -- 更新者
       CONSTRAINT user_info_pkc PRIMARY KEY (id)
     );
     
@@ -88,7 +88,7 @@ END $$;
 DO $$
 BEGIN
     CREATE TABLE user_info_id_generator (
-      pk character varying(100) NOT NULL, -- IDキー
+      pk varchar NOT NULL, -- IDキー
       value bigint NOT NULL, -- ID現在値
       CONSTRAINT user_info_id_generator_pkc PRIMARY KEY (pk)
     );
@@ -106,12 +106,12 @@ BEGIN
     CREATE TABLE user_privilege_info (
       id bigserial NOT NULL,
       user_info_id bigint NOT NULL, -- ユーザID
-      user_privilege character varying(64) NOT NULL, -- 権限区分
+      user_privilege varchar NOT NULL, -- 権限区分
       version bigint, -- バージョン
       created_at timestamp without time zone NOT NULL, -- 作成日時
-      created_by character varying, -- 作成者
+      created_by varchar, -- 作成者
       updated_at timestamp without time zone NOT NULL, -- 更新日時
-      updated_by character varying, -- 更新者
+      updated_by varchar, -- 更新者
       CONSTRAINT user_privilege_info_pkc PRIMARY KEY (id)
     );
     
@@ -139,13 +139,13 @@ BEGIN
     (
       id bigserial NOT NULL, -- ID
       user_info_id bigint NOT NULL, -- ユーザーID
-      title character varying NOT NULL, -- タイトル
-      memo character varying, -- メモ
+      title varchar NOT NULL, -- タイトル
+      memo text, -- メモ
       sortorder integer NOT NULL, -- ソートオーダー
       updated_at timestamp without time zone NOT NULL, -- 更新日
-      updated_by character varying, -- 更新者
+      updated_by varchar, -- 更新者
       created_at timestamp without time zone NOT NULL, -- 作成日
-      created_by character varying, -- 作成者
+      created_by varchar, -- 作成者
       version bigint DEFAULT 0, -- version
       CONSTRAINT item_pkc PRIMARY KEY (id)
     );

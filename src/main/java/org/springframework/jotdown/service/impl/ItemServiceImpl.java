@@ -32,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
         if (ItemEditMode.ADD.getMode().equals(form.getEditMode())) {
             Integer count = itemRepository.selectMaxSortorder(userInfoId);
             item.setUserInfoId(userInfoId);
-            item.setSortorder(count + 1);
+            item.setSortorder((count == null) ? 1 : count + 1);
         } else {
             item = itemRepository.findOne(form.getItemId());
             if (!item.getUserInfoId().equals(userInfoId)) {
