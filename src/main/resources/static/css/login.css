@@ -12,7 +12,7 @@
 @media screen and (max-width: 768px){
     .login-panel,
     .join-panel {
-        width: 355px;
+        width: 350px;
     }
 }
 

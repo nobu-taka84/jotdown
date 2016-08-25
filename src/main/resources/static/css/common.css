@@ -61,7 +61,7 @@ span.overflow {
 
 @media screen and (max-width: 480px){
     span.overflow {
-        width: 300px;
+        width: 280px;
     }
 }
 
