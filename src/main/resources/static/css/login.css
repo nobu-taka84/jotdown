@@ -8,6 +8,14 @@
 	width: 400px;
 }
 
+/* スマホ用 */
+@media screen and (max-width: 768px){
+    .login-panel,
+    .join-panel {
+        width: 355px;
+    }
+}
+
 .panel-body > p {
     margin: 0 0;
 }

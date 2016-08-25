@@ -19,12 +19,12 @@
       <div th:each="item : ${itemList}" class="panel-group" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4 class="panel-title padding-top-2">
+            <h4 class="panel-title padding-top-2 list-title">
               <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" th:onClick="'showPanelBody(' + ${item.id} + ')'">
-                <span class="list-title" th:text="${item.title}" th:id="'title-' + ${item.id}"></span>
+                <span class="overflow" th:text="${item.title}" th:id="'title-' + ${item.id}"></span>
               </a>
-              <span class="btn btn-xs btn-default pull-right glyphicon glyphicon-pencil margin-top-m3" th:onClick="'showEditModal(\'edit\', ' + ${item.id} + ')'" title="編集"></span>
             </h4>
+            <span class="list-title btn btn-xs btn-default pull-right glyphicon glyphicon-pencil margin-top-m3" th:onClick="'showEditModal(\'edit\', ' + ${item.id} + ')'" title="編集"></span>
           </div>
           <div th:id="'collapse-' + ${item.id}" class="panel-collapse collapse">
             <div class="panel-body">
