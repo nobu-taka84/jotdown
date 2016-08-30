@@ -22,47 +22,52 @@ hr {
 }
 
 .panel-group {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .panel-heading {
-    padding: 10px 10px 4px;
+	padding: 10px 10px 4px;
 }
 
 .panel-body-footer {
-    padding: 10px 15px;
-    background-color: #f5f5f5;
-    border-top: 1px solid #ddd;
+	padding: 10px 15px;
+	background-color: #f5f5f5;
+	border-top: 1px solid #ddd;
 }
 
 .list-title {
-  display: inline-block;
+	display: inline-block;
+}
+
+.input-memo {
+	resize: none;
+	height: 300px !important;
 }
 
 span.overflow {
-  width: 900px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
+	width: 900px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
 }
 
 @media screen and (min-width: 750px) and (max-width: 990px) {
-    span.overflow {
-        width: 680px;
-    }
+	span.overflow {
+		width: 680px;
+	}
 }
 
 @media screen and (min-width: 480px) and (max-width: 750px) {
-    span.overflow {
-        width: 400px;
-    }
+	span.overflow {
+		width: 400px;
+	}
 }
 
-@media screen and (max-width: 480px){
-    span.overflow {
-        width: 280px;
-    }
+@media screen and (max-width: 480px) {
+	span.overflow {
+		width: 280px;
+	}
 }
 
 .margin-top-m3 {
