@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
@@ -35,6 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomAuthenticationProvider authenticationProvider;
+    
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -64,7 +70,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // csrfはsessionがないと動かない。SessionTimeout時にPOSTすると403 Forbiddenを必ず返してしまうため、
                 // MissingCsrfTokenExceptionの時はリダイレクトを、それ以外の時は通常の扱いとする。
                 .accessDeniedHandler(accessDeniedHandler());
-
+        http.rememberMe()
+        // メモリにトークンを保持する。
+        .tokenRepository(jdbcTokenRepository())
+        // 状態を１ヵ月間保持する。
+        .tokenValiditySeconds(2592000);
         // CSRF設定
         http.csrf().requireCsrfProtectionMatcher(new CustomRequiresCsrfMatcher())
                 .csrfTokenRepository(this.csrfTokenRepository());
@@ -74,7 +84,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new CustomLoginUrlAuthenticationEntryPoint("/login");
     }
-
+    
+    /**
+     * Remember Me 認証に利用するトークンのリポジトリ
+     */
+    @Bean
+    public PersistentTokenRepository jdbcTokenRepository() {
+        JdbcTokenRepositoryImpl repository = new JdbcTokenRepositoryImpl();
+        repository.setDataSource(dataSource);
+        return repository;
+    }
+    
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new AccessDeniedHandler() {
