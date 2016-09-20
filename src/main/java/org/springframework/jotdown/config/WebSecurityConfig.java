@@ -70,11 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // csrfはsessionがないと動かない。SessionTimeout時にPOSTすると403 Forbiddenを必ず返してしまうため、
                 // MissingCsrfTokenExceptionの時はリダイレクトを、それ以外の時は通常の扱いとする。
                 .accessDeniedHandler(accessDeniedHandler());
-        http.rememberMe()
-        // メモリにトークンを保持する。
-        .tokenRepository(jdbcTokenRepository())
-        // 状態を１ヵ月間保持する。
-        .tokenValiditySeconds(2592000);
+
         // CSRF設定
         http.csrf().requireCsrfProtectionMatcher(new CustomRequiresCsrfMatcher())
                 .csrfTokenRepository(this.csrfTokenRepository());
@@ -83,16 +79,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new CustomLoginUrlAuthenticationEntryPoint("/login");
-    }
-    
-    /**
-     * Remember Me 認証に利用するトークンのリポジトリ
-     */
-    @Bean
-    public PersistentTokenRepository jdbcTokenRepository() {
-        JdbcTokenRepositoryImpl repository = new JdbcTokenRepositoryImpl();
-        repository.setDataSource(dataSource);
-        return repository;
     }
     
     @Bean
