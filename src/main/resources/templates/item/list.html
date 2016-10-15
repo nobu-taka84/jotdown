@@ -30,6 +30,7 @@
             <div class="panel-body">
               <input type="hidden" th:id="'formattedFlag-' + ${item.id}" value="false" />
               <input type="hidden" th:id="'memo-' + ${item.id}" th:value="${item.memo}" />
+              <input type="hidden" th:id="'memo-esc-' + ${item.id}" th:value="${#strings.escapeXml(item.memo)}" />
               <div th:id="'md-memo-' + ${item.id}" class="markdown-body"></div>
             </div>
             <div class="panel-body-footer">
@@ -109,7 +110,7 @@
 
 	function showPanelBody(id) {
 		if ($('#formattedFlag-' + id).val() === 'false') {
-			var formatted = marked($("#memo-" + id).val());
+			var formatted = marked($("#memo-esc-" + id).val());
 			$('#md-memo-' + id).html(formatted);
 	        $('#md-memo-' + id + ' pre code').each(function(i, e) {
 	            hljs.highlightBlock(e, e.className);
