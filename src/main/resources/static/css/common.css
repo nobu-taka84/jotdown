@@ -37,7 +37,11 @@ hr {
 }
 
 .list-title {
-	display: inline-block;
+	width: calc(100% - 35px);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
 }
 
 .input-memo {
