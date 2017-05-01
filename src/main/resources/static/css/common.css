@@ -26,7 +26,8 @@ hr {
 }
 
 .panel-heading {
-	padding: 10px 10px 4px;
+	height: 40px;
+	padding: 10px;
 }
 
 .panel-body-footer {
